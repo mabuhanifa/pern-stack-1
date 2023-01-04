@@ -6,9 +6,19 @@ app.use(express.json());
 app.use(cors());
 const port = 5000;
 
+app.get("/", (req, res) => {
+  res.send("200");
+});
+
 app.post("/todos", async (req, res) => {
   try {
-    console.log(req.body);
+    const { description } = req.body;
+    const newTodo = await pool.query(
+      "INSERT INTO todo (description) VALUES($1) RETURNING *",
+      [description]
+    );
+
+    res.json(newTodo.rows[0]);
   } catch (error) {
     console.error(error);
   }
