@@ -6,8 +6,14 @@ app.use(express.json());
 app.use(cors());
 const port = 5000;
 
-app.get("/", (req, res) => {
-  res.send("200");
+
+app.get("/todos", async (req, res) => {
+  try {
+    const allTodos = await pool.query("SELECT * FROM todo");
+    res.json(allTodos.rows);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.post("/todos", async (req, res) => {
